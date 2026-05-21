@@ -1174,7 +1174,7 @@ function Logo({ className }: { className?: string }) {
   }
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/logo.svg" alt="Logo" onError={() => setErr(true)} className={`h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(167,139,250,0.25)] ${className ?? ""}`} />
+    <img src="/logo.png" alt="Logo" onError={() => setErr(true)} className={`h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(167,139,250,0.25)] ${className ?? ""}`} />
   );
 }
 
