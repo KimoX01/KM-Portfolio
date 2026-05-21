@@ -896,38 +896,52 @@ function PhoneHeroContent() {
 }
 
 // ─── Phone frame ───────────────────────────────────────────────────────────────
+const PHONE_W = 390;
+const PHONE_H = 864;
+
 function PhoneFrame() {
   return (
     <div className="relative" style={{ filter: "drop-shadow(0 60px 120px rgba(0,0,0,0.85)) drop-shadow(0 0 1px rgba(255,255,255,0.04))" }}>
-      {/* Side volume buttons */}
       <div className="absolute -left-[14px] top-[120px] w-[6px] h-[36px] rounded-l-full bg-[#1c1c1c] border border-white/[0.06]" />
       <div className="absolute -left-[14px] top-[170px] w-[6px] h-[52px] rounded-l-full bg-[#1c1c1c] border border-white/[0.06]" />
       <div className="absolute -right-[14px] top-[150px] w-[6px] h-[68px] rounded-r-full bg-[#1c1c1c] border border-white/[0.06]" />
-
-      {/* Outer frame */}
       <div
         className="relative rounded-[52px] overflow-hidden"
         style={{
-          width: 390,
+          width: PHONE_W,
           padding: "10px",
           background: "linear-gradient(160deg, #2a2a2a 0%, #111 40%, #1e1e1e 100%)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.5)",
         }}
       >
-        {/* Screen bezel */}
         <div className="rounded-[44px] overflow-hidden" style={{ background: "#000", height: 844 }}>
-          {/* Dynamic island */}
           <div className="relative flex justify-center pt-3 pb-1 bg-black z-20">
             <div className="w-[120px] h-[34px] rounded-full bg-black border border-white/[0.08] flex items-center justify-center gap-3">
               <div className="w-[10px] h-[10px] rounded-full bg-[#1a1a1a] border border-white/10" />
               <div className="w-[8px] h-[8px] rounded-full bg-[#1a1a1a] border border-white/10" />
             </div>
           </div>
-          {/* Screen content */}
           <div style={{ height: "calc(844px - 50px)" }}>
             <PhoneHeroContent />
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ScaledPhone() {
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const calc = () => setScale(parseFloat(Math.min(1, (window.innerWidth - 32) / PHONE_W).toFixed(3)));
+    calc();
+    window.addEventListener("resize", calc, { passive: true });
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+  return (
+    <div style={{ width: PHONE_W * scale, height: PHONE_H * scale, position: "relative", flexShrink: 0 }}>
+      <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", position: "absolute", top: 0, left: 0 }}>
+        <PhoneFrame />
       </div>
     </div>
   );
@@ -1047,7 +1061,7 @@ function StackCard({
             animate={{ width: hovered ? "100%" : "0%" }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           />
-          <h3 className="font-heading text-3xl md:text-4xl uppercase text-white leading-tight mb-2">{project.title}</h3>
+          <h3 className="font-heading text-2xl md:text-4xl uppercase text-white leading-tight mb-2">{project.title}</h3>
           <p className="font-code text-[12px] text-white/40 leading-relaxed mb-5">{project.desc}</p>
           <div className="flex flex-wrap gap-2">
             {project.tags.map((t) => (
@@ -1105,7 +1119,7 @@ function ProjectsStack() {
         </motion.div>
 
         {/* Card stack — all cards sit in the same slot, animated in/out */}
-        <div className="relative w-full max-w-2xl mx-auto flex-1 min-h-0" style={{ maxHeight: 640 }}>
+        <div className="relative w-full max-w-2xl mx-auto flex-1 min-h-0" style={{ maxHeight: "min(640px, 65vh)" }}>
           {PROJECTS.map((project, i) => (
             <StackCard key={project.num} project={project} index={i} activeIndex={activeIndex} />
           ))}
@@ -1179,34 +1193,97 @@ function Logo({ className }: { className?: string }) {
 }
 
 // ─── Navbar ────────────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+  { label: "Projects", href: "#projects" },
+  { label: "Skills", href: "#skills" },
+  { label: "Pricing", href: "#pricing" },
+] as const;
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 30);
+    const fn = () => { setScrolled(window.scrollY > 30); if (window.scrollY > 60) setMenuOpen(false); };
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  const navBg = scrolled ? "rgba(10,10,10,0.95)" : "rgba(20,20,20,0.6)";
+  const navBorder = scrolled ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.07)";
+
   return (
     <motion.header
-      className="fixed top-0 inset-x-0 z-50 flex justify-center pt-5"
+      className="fixed top-0 inset-x-0 z-50 flex flex-col items-center pt-4 px-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
     >
+      {/* ── Main bar ── */}
       <nav
-        className="flex items-center gap-1 px-2 py-2 rounded-full border transition-all duration-500"
-        style={{ background: scrolled ? "rgba(10,10,10,0.92)" : "rgba(20,20,20,0.55)", borderColor: scrolled ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.07)", backdropFilter: "blur(24px)" }}
+        className="w-full max-w-2xl flex items-center justify-between px-3 py-2 rounded-full border transition-all duration-500"
+        style={{ background: navBg, borderColor: navBorder, backdropFilter: "blur(24px)" }}
       >
-        <a href="#home" className="px-3 flex items-center self-stretch -my-0.5">
+        {/* Logo */}
+        <a href="#home" className="flex items-center pl-1">
           <Logo />
         </a>
-        <div className="w-px h-5 bg-white/[0.08] mx-1" />
-        {(["Projects", "Skills", "Pricing"] as const).map((item) => (
-          <a key={item} href={`#${item.toLowerCase()}`} className="font-code text-[12px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5">{item}</a>
-        ))}
-        <a href="#contact" className="font-code text-[12px] font-bold tracking-[0.1em] px-5 py-2 rounded-full transition-all hover:opacity-85" style={{ background: A, color: "#0a0a0a" }}>Contact ↗</a>
+
+        {/* Desktop links */}
+        <div className="hidden sm:flex items-center gap-1">
+          {NAV_LINKS.map(({ label, href }) => (
+            <a key={label} href={href} className="font-code text-[12px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5">{label}</a>
+          ))}
+        </div>
+
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <a href="#contact" className="font-code text-[12px] font-bold tracking-[0.1em] px-4 py-2 rounded-full transition-all hover:opacity-85" style={{ background: A, color: "#0a0a0a" }}>
+            <span className="hidden sm:inline">Contact ↗</span>
+            <span className="sm:hidden">↗</span>
+          </a>
+          {/* Hamburger — mobile only */}
+          <button
+            className="sm:hidden w-9 h-9 rounded-full border border-white/15 flex flex-col items-center justify-center gap-[5px] bg-white/5"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            <motion.span className="block w-4 h-px bg-white/70 rounded-full" animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 6 : 0 }} transition={{ duration: 0.2 }} />
+            <motion.span className="block w-4 h-px bg-white/70 rounded-full" animate={{ opacity: menuOpen ? 0 : 1 }} transition={{ duration: 0.15 }} />
+            <motion.span className="block w-4 h-px bg-white/70 rounded-full" animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -6 : 0 }} transition={{ duration: 0.2 }} />
+          </button>
+        </div>
       </nav>
+
+      {/* ── Mobile dropdown ── */}
+      <motion.div
+        className="sm:hidden w-full max-w-2xl mt-2 rounded-2xl border border-white/[0.08] overflow-hidden"
+        style={{ background: "rgba(10,10,10,0.97)", backdropFilter: "blur(24px)" }}
+        initial={false}
+        animate={{ height: menuOpen ? "auto" : 0, opacity: menuOpen ? 1 : 0 }}
+        transition={{ duration: 0.25, ease: EASE }}
+      >
+        <div className="flex flex-col p-3 gap-1">
+          {NAV_LINKS.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              onClick={() => setMenuOpen(false)}
+              className="font-code text-[14px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-5 py-3.5 rounded-xl hover:bg-white/[0.05]"
+            >
+              {label}
+            </a>
+          ))}
+          <a
+            href="#contact"
+            onClick={() => setMenuOpen(false)}
+            className="mt-1 font-code text-[14px] font-bold tracking-[0.1em] px-5 py-3.5 rounded-xl text-center"
+            style={{ background: A, color: "#0a0a0a" }}
+          >
+            Contact ↗
+          </a>
+        </div>
+      </motion.div>
     </motion.header>
   );
 }
@@ -1224,7 +1301,7 @@ export default function Home() {
       <Navbar />
 
       {/* ═══════════════════════════════════ HERO ═══════════════════════════════════ */}
-      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center pt-20 pb-16 overflow-hidden">
+      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center pt-24 pb-10 overflow-hidden">
         {/* Ghost text sides */}
         <motion.div className="absolute left-[-2%] top-1/2 -translate-y-1/2 font-heading text-[clamp(60px,12vw,140px)] leading-none uppercase select-none pointer-events-none" style={{ color: "rgba(255,255,255,0.022)", y: ghostY }}>
           portfolio
@@ -1242,7 +1319,7 @@ export default function Home() {
           className="relative z-10"
         >
           <div className="absolute inset-[-50px] rounded-[80px] blur-3xl pointer-events-none" style={{ background: `${A}09` }} />
-          <PhoneFrame />
+          <ScaledPhone />
         </motion.div>
 
         {/* Scroll cue */}
