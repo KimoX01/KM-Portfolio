@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Abdelkarim Soussane — Portfolio
 
-## Getting Started
+Personal developer portfolio built with Next.js 16, Tailwind CSS v4, and Framer Motion. Features a scroll-driven project stack, custom contact form, animated process and pricing sections, and a devicons-powered tech stack grid.
 
-First, run the development server:
+**Live site:** _link after deployment_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Tech Stack
+
+- **Framework** — Next.js 16 (App Router, webpack)
+- **Styling** — Tailwind CSS v4
+- **Animations** — Framer Motion v12
+- **Language** — TypeScript
+- **Contact form** — Formspree
+- **Fonts** — Bebas Neue (headings), JetBrains Mono (body)
+
+---
+
+## Project Structure
+
+```
+src/
+  app/
+    page.tsx          # All sections — single-page layout
+    layout.tsx        # Font loading, metadata
+    globals.css       # Base styles, keyframe animations
+  components/
+    framer/           # Framer-exported components + custom runtime shim
+public/
+  profile.jpg         # Profile photo
+  logo.svg            # Logo (navbar + footer)
+  digicard.png        # Project image
+  surfoodsave.png     # Project image
+  secondhand.png      # Project image
+  convertiverse.png   # Project image
+  cv.pdf              # CV (English)
+  cv-zh.pdf           # CV (Chinese)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Customisation Points
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All content is defined at the top of `src/app/page.tsx`:
 
-## Learn More
+| Constant        | What it controls                                                    |
+| --------------- | ------------------------------------------------------------------- |
+| `const A`       | Accent colour (currently `#a78bfa`)                                 |
+| `PROJECTS`      | Project cards — title, description, tags, image, GitHub, demo links |
+| `PROCESS_STEPS` | Work process section — 4 steps                                      |
+| `PRICING_PLANS` | Pricing cards — name, price, features                               |
+| `TOOLS`         | Tech stack grid — icons pulled from devicons CDN                    |
+| `EXPERIENCE`    | Timeline entries                                                    |
+| `SKILLS`        | Skill groups                                                        |
+| `TESTIMONIALS`  | Testimonial cards                                                   |
+| `FAQ_ITEMS`     | Accordion questions and answers                                     |
+| `FORMSPREE_ID`  | Contact form endpoint ID                                            |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev -- --port 3001
+```
 
-## Deploy on Vercel
+Open [http://localhost:3001](http://localhost:3001).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> Turbopack is disabled (`--webpack` flag) for ARM64 compatibility.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Contact Form Setup
+
+The contact form uses [Formspree](https://formspree.io):
+
+1. Sign up at formspree.io with your email
+2. Create a new form → copy the form ID
+3. Replace `FORMSPREE_ID` in `src/app/page.tsx`
+
+---
+
+## License
+
+© 2025 Abdelkarim Soussane. All rights reserved.
