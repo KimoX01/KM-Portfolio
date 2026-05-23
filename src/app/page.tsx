@@ -317,7 +317,7 @@ function TestimonialGrid() {
 
 // ─── Contact form (Formspree) ─────────────────────────────────────────────────
 // Sign up at formspree.io → create a form → paste your form ID below
-const FORMSPREE_ID = "xpznqkba"; // replace with your real Formspree form ID
+const FORMSPREE_ID = "mredpnav"; // replace with your real Formspree form ID
 
 function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
