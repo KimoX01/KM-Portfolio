@@ -141,29 +141,29 @@ const SKILLS = [
   { group: "Data Science", items: ["Pandas", "NumPy", "Scikit-learn", "PySpark", "Anaconda", "Jupyter"] },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote: "Abdelkarim delivered a complete frontend for our internal tool in three weeks — clean code, solid UX, and zero hand-holding required. He's one of those rare developers who thinks about the product, not just the ticket.",
-    name: "Yassine Alaoui",
-    role: "CTO",
-    company: "Innovatech Consulting",
-    initials: "YA",
-  },
-  {
-    quote: "Worked with him on our food-rescue app. He handled auth, real-time chat, maps, and push notifications — basically the whole technical scope — while keeping the UI genuinely good-looking. Impressive range.",
-    name: "Fatima Zahra Benali",
-    role: "Co-founder",
-    company: "SurFoodSave",
-    initials: "FB",
-  },
-  {
-    quote: "Top GPA, top attitude. Abdelkarim consistently produces work that goes beyond the brief. If you need someone who ships and communicates well across languages and time zones, he's the right pick.",
-    name: "Prof. Li Mingzhe",
-    role: "Academic Supervisor",
-    company: "Hangzhou Dianzi University",
-    initials: "LM",
-  },
-];
+// const TESTIMONIALS = [
+//   {
+//     quote: "Abdelkarim delivered a complete frontend for our internal tool in three weeks — clean code, solid UX, and zero hand-holding required. He's one of those rare developers who thinks about the product, not just the ticket.",
+//     name: "Yassine Alaoui",
+//     role: "CTO",
+//     company: "Innovatech Consulting",
+//     initials: "YA",
+//   },
+//   {
+//     quote: "Worked with him on our food-rescue app. He handled auth, real-time chat, maps, and push notifications — basically the whole technical scope — while keeping the UI genuinely good-looking. Impressive range.",
+//     name: "Fatima Zahra Benali",
+//     role: "Co-founder",
+//     company: "SurFoodSave",
+//     initials: "FB",
+//   },
+//   {
+//     quote: "Top GPA, top attitude. Abdelkarim consistently produces work that goes beyond the brief. If you need someone who ships and communicates well across languages and time zones, he's the right pick.",
+//     name: "Prof. Li Mingzhe",
+//     role: "Academic Supervisor",
+//     company: "Hangzhou Dianzi University",
+//     initials: "LM",
+//   },
+// ];
 
 const FAQ_ITEMS = [
   {
@@ -299,34 +299,34 @@ function CustomFAQ() {
 }
 
 // ─── Custom testimonials ────────────────────────────────────────────────────────
-function TestimonialGrid() {
-  return (
-    <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      {TESTIMONIALS.map((t, i) => (
-        <StaggerItem key={i}>
-          <motion.div
-            className="relative rounded-2xl p-7 border border-white/[0.07] bg-white/[0.02] flex flex-col gap-5 h-full"
-            whileHover={{ borderColor: `${A}20`, backgroundColor: "rgba(255,255,255,0.035)", y: -4 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            {/* Quote mark */}
-            <span className="font-heading text-5xl leading-none select-none" style={{ color: `${A}25` }}>&ldquo;</span>
-            <p className="font-code text-[12.5px] text-white/55 leading-[1.8] flex-1 -mt-4">{t.quote}</p>
-            <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center font-code text-[11px] font-bold shrink-0" style={{ background: `${A}18`, color: A }}>
-                {t.initials}
-              </div>
-              <div>
-                <p className="font-code text-[12px] text-white leading-tight">{t.name}</p>
-                <p className="font-code text-[11px] text-white/35 leading-tight mt-0.5">{t.role} · {t.company}</p>
-              </div>
-            </div>
-          </motion.div>
-        </StaggerItem>
-      ))}
-    </Stagger>
-  );
-}
+// function TestimonialGrid() {
+//   return (
+//     <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-5">
+//       {TESTIMONIALS.map((t, i) => (
+//         <StaggerItem key={i}>
+//           <motion.div
+//             className="relative rounded-2xl p-7 border border-white/[0.07] bg-white/[0.02] flex flex-col gap-5 h-full"
+//             whileHover={{ borderColor: `${A}20`, backgroundColor: "rgba(255,255,255,0.035)", y: -4 }}
+//             transition={{ duration: 0.3, ease: EASE }}
+//           >
+//             {/* Quote mark */}
+//             <span className="font-heading text-5xl leading-none select-none" style={{ color: `${A}25` }}>&ldquo;</span>
+//             <p className="font-code text-[12.5px] text-white/55 leading-[1.8] flex-1 -mt-4">{t.quote}</p>
+//             <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+//               <div className="w-9 h-9 rounded-full flex items-center justify-center font-code text-[11px] font-bold shrink-0" style={{ background: `${A}18`, color: A }}>
+//                 {t.initials}
+//               </div>
+//               <div>
+//                 <p className="font-code text-[12px] text-white leading-tight">{t.name}</p>
+//                 <p className="font-code text-[11px] text-white/35 leading-tight mt-0.5">{t.role} · {t.company}</p>
+//               </div>
+//             </div>
+//           </motion.div>
+//         </StaggerItem>
+//       ))}
+//     </Stagger>
+//   );
+// }
 
 // ─── Contact form (Formspree) ─────────────────────────────────────────────────
 // Sign up at formspree.io → create a form → paste your form ID below
@@ -577,107 +577,107 @@ function WorkProcess() {
 }
 
 // ─── Pricing ──────────────────────────────────────────────────────────────────
-const PRICING_PLANS = [
-  {
-    name: "Starter",
-    price: "$299",
-    period: "one-time",
-    desc: "Perfect for landing pages, portfolios, or simple marketing sites.",
-    features: [
-      "Up to 5 pages — responsive on all devices",
-      "Custom design from Figma mockup",
-      "Contact form + basic SEO setup",
-      "2 rounds of revisions",
-      "Delivered in 5–7 days",
-      "Source code included",
-    ],
-    cta: "Get Started",
-    href: "#contact",
-    highlight: false,
-  },
-  {
-    name: "Full Product",
-    price: "$999+",
-    period: "per project",
-    desc: "For full-stack web or mobile apps — auth, database, API, and deployment.",
-    features: [
-      "Complete web or mobile app (React / React Native)",
-      "Backend API + database design (Node.js / Python)",
-      "User auth, admin dashboard, notifications",
-      "CI/CD pipeline + production deploy",
-      "Weekly preview links throughout build",
-      "Full handoff: source code + docs + 30-day support",
-    ],
-    cta: "Let's Talk Scope",
-    href: "#contact",
-    highlight: true,
-  },
-];
-
-function PricingPlans() {
-  return (
-    <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
-      {PRICING_PLANS.map((plan, i) => (
-        <Reveal key={plan.name} delay={i * 0.1}>
-          <motion.div
-            className="relative rounded-2xl border flex flex-col h-full overflow-hidden"
-            style={{
-              borderColor: plan.highlight ? `${A}40` : "rgba(255,255,255,0.07)",
-              background: plan.highlight ? `linear-gradient(135deg, ${A}0d 0%, transparent 60%), rgba(255,255,255,0.02)` : "rgba(255,255,255,0.02)",
-            }}
-            whileHover={{ borderColor: plan.highlight ? `${A}70` : `${A}30`, y: -4 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            {plan.highlight && (
-              <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(to right, transparent, ${A}, transparent)` }} />
-            )}
-            {plan.highlight && (
-              <div className="absolute top-5 right-5">
-                <span className="font-code text-[10px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full" style={{ background: `${A}20`, color: A }}>Most Popular</span>
-              </div>
-            )}
-            <div className="p-8 flex flex-col gap-6 flex-1">
-              {/* Header */}
-              <div>
-                <p className="font-code text-[11px] tracking-[0.3em] uppercase text-white/30 mb-3">{plan.name}</p>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="font-heading text-[4.5rem] leading-none" style={{ color: plan.highlight ? A : "white" }}>{plan.price}</span>
-                  <span className="font-code text-[12px] text-white/30">{plan.period}</span>
-                </div>
-                <p className="font-code text-[12.5px] text-white/40 leading-relaxed">{plan.desc}</p>
-              </div>
-              {/* Divider */}
-              <div className="h-px" style={{ background: plan.highlight ? `${A}20` : "rgba(255,255,255,0.06)" }} />
-              {/* Features */}
-              <ul className="space-y-3 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-3 font-code text-[12.5px] text-white/50 leading-relaxed">
-                    <span className="mt-0.5 shrink-0 text-[10px]" style={{ color: A }}>▹</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              {/* CTA */}
-              <motion.a
-                href={plan.href}
-                className="mt-4 w-full flex items-center justify-center gap-2 font-code text-[13px] font-bold py-3.5 rounded-xl tracking-[0.08em]"
-                style={plan.highlight
-                  ? { background: A, color: "#0a0a0a" }
-                  : { border: `1px solid ${A}30`, color: A }}
-                whileHover={plan.highlight
-                  ? { scale: 1.02, boxShadow: `0 0 28px ${A}40` }
-                  : { borderColor: `${A}70`, backgroundColor: `${A}0a` }}
-                transition={{ duration: 0.2 }}
-              >
-                {plan.cta} ↗
-              </motion.a>
-            </div>
-          </motion.div>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
+// const PRICING_PLANS = [
+//   {
+//     name: "Starter",
+//     price: "$299",
+//     period: "one-time",
+//     desc: "Perfect for landing pages, portfolios, or simple marketing sites.",
+//     features: [
+//       "Up to 5 pages — responsive on all devices",
+//       "Custom design from Figma mockup",
+//       "Contact form + basic SEO setup",
+//       "2 rounds of revisions",
+//       "Delivered in 5–7 days",
+//       "Source code included",
+//     ],
+//     cta: "Get Started",
+//     href: "#contact",
+//     highlight: false,
+//   },
+//   {
+//     name: "Full Product",
+//     price: "$999+",
+//     period: "per project",
+//     desc: "For full-stack web or mobile apps — auth, database, API, and deployment.",
+//     features: [
+//       "Complete web or mobile app (React / React Native)",
+//       "Backend API + database design (Node.js / Python)",
+//       "User auth, admin dashboard, notifications",
+//       "CI/CD pipeline + production deploy",
+//       "Weekly preview links throughout build",
+//       "Full handoff: source code + docs + 30-day support",
+//     ],
+//     cta: "Let's Talk Scope",
+//     href: "#contact",
+//     highlight: true,
+//   },
+// ];
+//
+// function PricingPlans() {
+//   return (
+//     <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
+//       {PRICING_PLANS.map((plan, i) => (
+//         <Reveal key={plan.name} delay={i * 0.1}>
+//           <motion.div
+//             className="relative rounded-2xl border flex flex-col h-full overflow-hidden"
+//             style={{
+//               borderColor: plan.highlight ? `${A}40` : "rgba(255,255,255,0.07)",
+//               background: plan.highlight ? `linear-gradient(135deg, ${A}0d 0%, transparent 60%), rgba(255,255,255,0.02)` : "rgba(255,255,255,0.02)",
+//             }}
+//             whileHover={{ borderColor: plan.highlight ? `${A}70` : `${A}30`, y: -4 }}
+//             transition={{ duration: 0.3, ease: EASE }}
+//           >
+//             {plan.highlight && (
+//               <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(to right, transparent, ${A}, transparent)` }} />
+//             )}
+//             {plan.highlight && (
+//               <div className="absolute top-5 right-5">
+//                 <span className="font-code text-[10px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full" style={{ background: `${A}20`, color: A }}>Most Popular</span>
+//               </div>
+//             )}
+//             <div className="p-8 flex flex-col gap-6 flex-1">
+//               {/* Header */}
+//               <div>
+//                 <p className="font-code text-[11px] tracking-[0.3em] uppercase text-white/30 mb-3">{plan.name}</p>
+//                 <div className="flex items-baseline gap-2 mb-2">
+//                   <span className="font-heading text-[4.5rem] leading-none" style={{ color: plan.highlight ? A : "white" }}>{plan.price}</span>
+//                   <span className="font-code text-[12px] text-white/30">{plan.period}</span>
+//                 </div>
+//                 <p className="font-code text-[12.5px] text-white/40 leading-relaxed">{plan.desc}</p>
+//               </div>
+//               {/* Divider */}
+//               <div className="h-px" style={{ background: plan.highlight ? `${A}20` : "rgba(255,255,255,0.06)" }} />
+//               {/* Features */}
+//               <ul className="space-y-3 flex-1">
+//                 {plan.features.map((f) => (
+//                   <li key={f} className="flex items-start gap-3 font-code text-[12.5px] text-white/50 leading-relaxed">
+//                     <span className="mt-0.5 shrink-0 text-[10px]" style={{ color: A }}>▹</span>
+//                     {f}
+//                   </li>
+//                 ))}
+//               </ul>
+//               {/* CTA */}
+//               <motion.a
+//                 href={plan.href}
+//                 className="mt-4 w-full flex items-center justify-center gap-2 font-code text-[13px] font-bold py-3.5 rounded-xl tracking-[0.08em]"
+//                 style={plan.highlight
+//                   ? { background: A, color: "#0a0a0a" }
+//                   : { border: `1px solid ${A}30`, color: A }}
+//                 whileHover={plan.highlight
+//                   ? { scale: 1.02, boxShadow: `0 0 28px ${A}40` }
+//                   : { borderColor: `${A}70`, backgroundColor: `${A}0a` }}
+//                 transition={{ duration: 0.2 }}
+//               >
+//                 {plan.cta} ↗
+//               </motion.a>
+//             </div>
+//           </motion.div>
+//         </Reveal>
+//       ))}
+//     </div>
+//   );
+// }
 
 // ─── CV Download dropdown ─────────────────────────────────────────────────────
 function CVDownload() {
@@ -1209,7 +1209,7 @@ function Logo({ className }: { className?: string }) {
 const NAV_LINKS = [
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Pricing", href: "#pricing" },
+  // { label: "Pricing", href: "#pricing" },
 ] as const;
 
 function Navbar() {
@@ -1568,15 +1568,15 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════ TESTIMONIALS ═══════════════════════════════════ */}
-      <section id="testimonials" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
+      {/* <section id="testimonials" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
         <div className="max-w-5xl mx-auto">
           <Reveal><SectionLabel n="07" text="Testimonials" /><h2 className="font-heading text-5xl md:text-7xl uppercase leading-none text-white mb-14">What People Say</h2></Reveal>
           <TestimonialGrid />
         </div>
-      </section>
+      </section> */}
 
       {/* ═══════════════════════════════════ PRICING ═══════════════════════════════════ */}
-      <section id="pricing" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
+      {/* <section id="pricing" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
         <div className="max-w-5xl mx-auto">
           <Reveal className="text-center mb-14">
             <SectionLabel n="08" text="Pricing" />
@@ -1586,7 +1586,7 @@ export default function Home() {
             <PricingPlans />
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ═══════════════════════════════════ FAQ ═══════════════════════════════════ */}
       <section id="faq" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
