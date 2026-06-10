@@ -23,6 +23,7 @@ const SERVICES = [
 ];
 
 const PROJECTS = [
+
   {
     num: "01",
     category: "Web App",
@@ -50,7 +51,33 @@ const PROJECTS = [
     demo: "https://luckincoffee.vercel.app/luckin" as string | null,
   },
   {
-    num: "03",
+    num: "03",  
+    category: "Web App",
+    title: "Passiflora",
+    desc: "Full restaurant web experience for a Casablanca-based restaurant — includes an online menu, food ordering system, table reservations, and order tracking. Built with Next.js, fully in French, and designed to feel warm and appetizing.",
+    tags: ["Next.js", "React 19", "FastAPI", "MongoDB"],
+    bg:"#05080f",
+    grid: "#60a5fa",
+    accent: "#60a5fa",
+    image: "/passiflora.png",
+    github: "https://github.com/KimoX01/passiflora-menu" as string | null,
+    demo: "https://passiflora-menu.vercel.app/" as string | null,
+  }
+  {
+    num: "04",  
+    category: "Web App",
+    title: "Pulse AI News",
+    desc: "Pulse is a real-time news aggregator built as a social media alternative — designed to surface only substantive, high-quality content across world events, science, AI, tech, health, climate, and culture.",
+    tags: ["Next.js", "React 19", "FastAPI"],
+    bg:"#05080f",
+    grid: "#60a5fa",
+    accent: "#60a5fa",
+    image: "/pulse.png",
+    github: "https://github.com/KimoX01/PULSE-Ai-news" as string | null,
+    demo: "https://pulseainews.vercel.app/" as string | null,
+  },
+  {
+    num: "05",
     category: "Mobile App",
     title: "SurFoodSave",
     desc: "Food rescue app connecting restaurants with food banks — real-time chat, push notifications, geolocation matching.",
@@ -63,7 +90,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "04",
+    num: "06",
     category: "Web Development",
     title: "DigiCard Web App",
     desc: "Digital business card platform with QR sharing and a full admin panel, built solo during internship at Innovatech.",
@@ -76,7 +103,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "05",
+    num: "07",
     category: "Mobile App",
     title: "Second-hand Market",
     desc: "P2P marketplace with in-app messaging, photo uploads, category filtering and a Node.js REST backend.",
@@ -89,7 +116,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "06",
+    num: "08",
     category: "Dev Tool",
     title: "Convertiverse",
     desc: "Automated pipeline transforming structured Excel data into clean, styled, production-ready HTML tables. Live on the web.",
