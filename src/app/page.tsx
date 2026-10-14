@@ -47,10 +47,11 @@ const PROJECTS = [
     title: "Soussane Joaillerie",
     desc: "Website for a fine-jewelry house working in 18k gold: a filterable collection with quick view, made-to-order requests and ordering by Instagram DM. French, mobile first.",
     tags: ["Next.js", "TypeScript", "FastAPI", "MongoDB"],
-    bg: "#1c1612",
-    grid: "#d4b483",
-    accent: "#d4b483",
-    image: "/joaillerie.webp",
+    bg: "#faf7f2",
+    grid: "#b08a5a",
+    accent: "#b08a5a",
+    image: "/joaillerie-logo.webp",
+    imageFit: "logo",
     github: null as string | null,
     demo: "https://soussane-joaillerie.vercel.app/" as string | null,
   },
@@ -1021,27 +1022,12 @@ function StackCard({
               alt={project.title}
               loading="lazy"
               decoding="async"
-              className={
-                project.imageFit === "logo"
-                  ? "absolute inset-0 w-full h-full object-cover"
-                  : "absolute inset-0 w-full h-full object-cover opacity-75"
-              }
+              className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          {/* Dot grid overlay */}
-          <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(circle, ${project.grid} 1.5px, transparent 1.5px)`, backgroundSize: "28px 28px" }} />
-          {/* Centre glow */}
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl"
-            style={{ background: project.accent }}
-            animate={{ opacity: hovered ? 0.22 : (project.image ? 0.05 : 0.1), scale: hovered ? 1.3 : 1 }}
-            transition={{ duration: 0.45 }}
-          />
-          {/* Number watermark */}
-          <span className="absolute bottom-3 right-5 font-heading text-[6rem] leading-none select-none pointer-events-none" style={{ color: `${project.accent}18` }}>{project.num}</span>
           {/* Category pill */}
           <div className="absolute top-5 left-5">
-            <span className="font-code text-[10px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full border backdrop-blur-sm" style={{ color: project.accent, borderColor: `${project.accent}50`, background: `rgba(0,0,0,0.5)` }}>
+            <span className="font-code text-[10px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-full border backdrop-blur-sm" style={{ color: project.accent, borderColor: `${project.accent}50`, background: "rgba(10,10,10,0.82)" }}>
               {project.category}
             </span>
           </div>
