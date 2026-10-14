@@ -14,7 +14,7 @@ import {
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const A = "#a78bfa";
-const DESIGN_PORTFOLIO = "https://kimodesigns.vercel.app/";
+const DESIGN_PORTFOLIO = "https://design.kimox01.tech/";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
@@ -253,7 +253,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Can you handle design as well as development?",
-    a: "Yes — I design in Figma first, then build it myself. That means no designer-developer gap, tighter iteration, and a cohesive product. My design work lives on a separate portfolio: kimodesigns.vercel.app.",
+    a: "Yes — I design in Figma first, then build it myself. That means no designer-developer gap, tighter iteration, and a cohesive product. My design work lives on a separate portfolio: design.kimox01.tech.",
   },
   {
     q: "Do you work remotely with international clients?",
