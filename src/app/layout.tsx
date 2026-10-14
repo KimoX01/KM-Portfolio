@@ -15,8 +15,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Abdelkarim Soussane — Developer Portfolio",
-  description: "Full-Stack Developer specializing in React, Next.js, and Node.js",
+  title: "Abdelkarim Soussane — Frontend Developer",
+  description: "Frontend developer for web and mobile: Next.js, TypeScript and React Native, from Figma designs to production.",
 };
 
 export default function RootLayout({

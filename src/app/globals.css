@@ -34,6 +34,19 @@ body {
   to   { transform: rotate(360deg); }
 }
 
+/* GPU-only drift for the background blob: rotate + gentle squash, no repaints */
+@keyframes blob-drift {
+  0%   { transform: rotate(0deg) scale(1, 1); }
+  25%  { transform: rotate(90deg) scale(1.06, 0.95); }
+  50%  { transform: rotate(180deg) scale(0.96, 1.05); }
+  75%  { transform: rotate(270deg) scale(1.04, 0.97); }
+  100% { transform: rotate(360deg) scale(1, 1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; }
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -43,3 +56,11 @@ body {
   animation: marquee 28s linear infinite;
 }
 
+
+/* Hero greeting: steel-to-lavender gradient text */
+.hero-heading {
+  background: linear-gradient(180deg, #5d5a6b 0%, #cfc8ec 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

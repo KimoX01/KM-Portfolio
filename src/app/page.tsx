@@ -1,47 +1,77 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
 } from "framer-motion";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const A = "#a78bfa";
+const DESIGN_PORTFOLIO = "https://kimodesigns.vercel.app/";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 const SERVICES = [
-  { num: "01", title: "Frontend Development", desc: "Pixel-perfect interfaces with React — fast to load and smooth to use.", tags: ["React", "JavaScript", "HTML/CSS"] },
-  { num: "02", title: "Mobile App Development", desc: "Cross-platform apps with React Native & Expo from auth to real-time chat.", tags: ["React Native", "Expo", "Firebase"] },
-  { num: "03", title: "Backend & APIs", desc: "Scalable REST APIs and database design with Node.js, Python, and PHP.", tags: ["Node.js", "Python", "PHP"] },
-  { num: "04", title: "Data Visualization", desc: "Raw data into clear, interactive dashboards using Python's data ecosystem.", tags: ["Python", "Pandas", "NumPy"] },
-  { num: "05", title: "Database Design", desc: "Relational schemas and real-time NoSQL solutions for your application's needs.", tags: ["SQL", "Firebase", "Docker"] },
-  { num: "06", title: "UI/UX Design", desc: "User-centred design focused on simplicity, speed, and measurable improvement.", tags: ["Figma", "UI/UX", "Prototyping"] },
+  { num: "01", title: "Frontend Development", desc: "Fast, accessible interfaces in React and Next.js, typed end to end with TypeScript.", tags: ["React", "Next.js", "TypeScript"] },
+  { num: "02", title: "Mobile App Development", desc: "Cross-platform iOS and Android apps with React Native and Expo, from auth to in-app messaging.", tags: ["React Native", "Expo", "Firebase"] },
+  { num: "03", title: "Backend & APIs", desc: "REST APIs and data models that the frontend can rely on, with FastAPI, Node.js or Spring Boot.", tags: ["FastAPI", "Node.js", "MongoDB"] },
+  { num: "04", title: "UI/UX Design", desc: "I design in Figma first, then build it myself, so nothing gets lost between design and code.", tags: ["Figma", "Prototyping", "Design systems"] },
 ];
 
 const PROJECTS = [
-
   {
     num: "01",
-    category: "Web App",
-    title: "Seiko Watches",
-    desc: "Cinematic, scroll-driven product showcase for Seiko watches — immersive animations and a premium look.",
-    tags: ["Next.js", "TypeScript"],
-    bg: "#05080f",
-    grid: "#60a5fa",
-    accent: "#60a5fa",
-    image: "/seiko.png",
-    github: "https://github.com/KimoX01/SEIKO" as string | null,
-    demo: "https://seiko-watches.vercel.app/" as string | null,
+    category: "Web + Mobile",
+    title: "PetiVeto",
+    desc: "Two-sided veterinary platform for Morocco that I co-founded: a Next.js clinic dashboard for vets and a React Native app for pet owners, connected to a FastAPI backend. Pre-launch.",
+    tags: ["Next.js", "React Native", "FastAPI"],
+    bg: "#0a5768",
+    grid: "#2dd4bf",
+    accent: "#2dd4bf",
+    image: "/petiveto-logo.jpg",
+    // Brand logo baked onto a wide teal canvas: shown at full opacity, not dimmed like screenshots.
+    imageFit: "logo",
+    github: null as string | null,
+    demo: null as string | null,
   },
   {
-    num: "02",
+    num: "02",  
+    category: "Concept · Full-stack",
+    title: "Passiflora",
+    desc: "Full-stack, French-language restaurant platform for Casablanca: menu, online ordering, table reservations and order tracking.",
+    tags: ["Next.js", "React 19", "FastAPI", "MongoDB"],
+    bg:"#05080f",
+    grid: "#60a5fa",
+    accent: "#60a5fa",
+    image: "/passiflora.webp",
+    github: "https://github.com/KimoX01/passiflora-menu" as string | null,
+    demo: "https://passiflora-menu.vercel.app/" as string | null,
+  },
+  {
+    num: "03",  
     category: "Web App",
+    title: "Pulse AI News",
+    desc: "Real-time news aggregator pulling live stories from BBC, NPR, The Guardian, arXiv and more, filtered by category and refreshed automatically.",
+    tags: ["Next.js", "React 19", "FastAPI"],
+    bg:"#05080f",
+    grid: "#60a5fa",
+    accent: "#60a5fa",
+    image: "/pulse.webp",
+    github: "https://github.com/KimoX01/PULSE-Ai-news" as string | null,
+    demo: "https://pulseainews.vercel.app/" as string | null,
+  },
+  {
+    num: "04",
+    category: "Concept · Web",
     title: "Luckin Coffee",
-    desc: "Premium marketing site for Luckin Coffee (瑞幸咖啡) — bilingual EN/中文, fully responsive, static export.",
+    desc: "Responsive English/中文 site for Luckin Coffee (瑞幸咖啡) with language switching, statically exported.",
     tags: ["Next.js 16", "TypeScript"],
     bg: "#1a0505",
     grid: "#ef4444",
@@ -51,59 +81,46 @@ const PROJECTS = [
     demo: "https://luckincoffee.vercel.app/luckin" as string | null,
   },
   {
-    num: "03",  
-    category: "Web App",
-    title: "Passiflora",
-    desc: "Full restaurant web experience for a Casablanca-based restaurant — includes an online menu, food ordering system, table reservations, and order tracking. Built with Next.js, fully in French, and designed to feel warm and appetizing.",
-    tags: ["Next.js", "React 19", "FastAPI", "MongoDB"],
-    bg:"#05080f",
+    num: "05",
+    category: "Concept · Web",
+    title: "Seiko Watches",
+    desc: "Scroll-driven product page with cinematic animations, optimized for load performance.",
+    tags: ["Next.js", "TypeScript"],
+    bg: "#05080f",
     grid: "#60a5fa",
     accent: "#60a5fa",
-    image: "/passiflora.png",
-    github: "https://github.com/KimoX01/passiflora-menu" as string | null,
-    demo: "https://passiflora-menu.vercel.app/" as string | null,
-  }
-  {
-    num: "04",  
-    category: "Web App",
-    title: "Pulse AI News",
-    desc: "Pulse is a real-time news aggregator built as a social media alternative — designed to surface only substantive, high-quality content across world events, science, AI, tech, health, climate, and culture.",
-    tags: ["Next.js", "React 19", "FastAPI"],
-    bg:"#05080f",
-    grid: "#60a5fa",
-    accent: "#60a5fa",
-    image: "/pulse.png",
-    github: "https://github.com/KimoX01/PULSE-Ai-news" as string | null,
-    demo: "https://pulseainews.vercel.app/" as string | null,
+    image: "/seiko.webp",
+    github: "https://github.com/KimoX01/SEIKO" as string | null,
+    demo: "https://seiko-watches.vercel.app/" as string | null,
   },
   {
-    num: "05",
+    num: "06",
     category: "Mobile App",
     title: "SurFoodSave",
-    desc: "Food rescue app connecting restaurants with food banks — real-time chat, push notifications, geolocation matching.",
+    desc: "App for reselling near-expiry food, with listings, expiry tracking, user auth and in-app messaging. Designed in Figma first.",
     tags: ["React Native", "Expo", "Firebase"],
     bg: "#0d0d1f",
     grid: "#818cf8",
     accent: "#818cf8",
-    image: "/surfoodsave.png",
+    image: "/surfoodsave.webp",
     github: "https://github.com/KimoX01/SurFoodSave" as string | null,
     demo: null as string | null,
   },
   {
-    num: "06",
+    num: "07",
     category: "Web Development",
     title: "DigiCard Web App",
-    desc: "Digital business card platform with QR sharing and a full admin panel, built solo during internship at Innovatech.",
-    tags: ["Angular", "HTML/CSS", "SpringBoot"],
+    desc: "Digital business card platform with QR sharing and an admin dashboard. I built the complete Angular frontend during my internship at Innovatech.",
+    tags: ["Angular", "TypeScript", "Spring Boot"],
     bg: "#0d1f0d",
     grid: "#4ade80",
     accent: "#4ade80",
-    image: "/digicard.png",
+    image: "/digicard.webp",
     github: null as string | null,
     demo: null as string | null,
   },
   {
-    num: "07",
+    num: "08",
     category: "Mobile App",
     title: "Second-hand Market",
     desc: "P2P marketplace with in-app messaging, photo uploads, category filtering and a Node.js REST backend.",
@@ -111,12 +128,12 @@ const PROJECTS = [
     bg: "#1f0d0d",
     grid: "#fb923c",
     accent: "#fb923c",
-    image: "/secondhand.png",
+    image: "/secondhand.webp",
     github: null as string | null,
     demo: null as string | null,
   },
   {
-    num: "08",
+    num: "09",
     category: "Dev Tool",
     title: "Convertiverse",
     desc: "Automated pipeline transforming structured Excel data into clean, styled, production-ready HTML tables. Live on the web.",
@@ -124,7 +141,7 @@ const PROJECTS = [
     bg: "#0d1a1f",
     grid: "#22d3ee",
     accent: "#22d3ee",
-    image: "/convertiverse.png",
+    image: "/convertiverse.webp",
     github: "https://github.com/KimoX01/excel-to-html" as string | null,
     demo: "https://converter.simplesolutions.uz/" as string | null,
   },
@@ -132,13 +149,32 @@ const PROJECTS = [
 
 const EXPERIENCE = [
   {
-    period: "Jul 2025 – Sep 2025",
-    role: "Frontend Developer Intern",
-    company: "Innovatech Consulting",
+    period: "Apr 2026 – Present",
+    role: "Co-Founder · Frontend Developer & Product Designer",
+    company: "PetiVeto · Morocco, remote",
     bullets: [
-      "Sole frontend engineer on DigiCard — a digital business card platform shipped to real users with QR sharing, auth, and a full admin dashboard.",
-      "Rewrote UI components after user interviews, cutting task completion time by ~30%.",
-      "Picked up backend tasks in Node.js when the team was stretched — shipped three API endpoints and a cron job.",
+      "Built the entire frontend of a two-sided veterinary platform: a Next.js clinic dashboard for vets and a React Native (Expo) mobile app for pet owners (pre-launch).",
+      "Implemented the core flows across web and mobile: patient records, appointments and owner communication, connected to the platform's FastAPI backend.",
+      "Designed the UI in Figma first, then turned it into the components and screens of both apps.",
+      "Shaped the feature set from interviews with 4 Moroccan veterinarians about their clinic workflows.",
+    ],
+  },
+  {
+    period: "Jul 2025 – Sep 2025",
+    role: "Frontend Developer & UI/UX Designer Intern",
+    company: "Innovatech Consulting · Casablanca",
+    bullets: [
+      "Built the complete Angular frontend of DigiCard, a digital business card platform with QR sharing and an admin dashboard, focused on clean UI and fast load times.",
+      "Reworked UI components based on feedback from users and the team, simplifying navigation.",
+      "Took on Spring Boot backend tasks when the team needed support, beyond the original scope.",
+    ],
+  },
+  {
+    period: "Sep 2026 – Jun 2029",
+    role: "Master's, Computer Science",
+    company: "Nanjing University of Science and Technology",
+    bullets: [
+      "Currently enrolled, available for part-time and freelance work alongside my studies.",
     ],
   },
   {
@@ -146,26 +182,26 @@ const EXPERIENCE = [
     role: "B.Sc. Software Engineering",
     company: "Hangzhou Dianzi University",
     bullets: [
-      "Top academic standing — coursework spanning algorithms, databases, web, and mobile development.",
-      "Built 4 production projects alongside studies, from a food-rescue app to a P2P marketplace.",
-      "Led Volunteers Dept at International Student Association · active in GDG Hangzhou.",
+      "Graduated with a GPA of 4.44 / 5.",
+      "Shipped live web and mobile projects alongside my studies, from a restaurant ordering platform to a real-time news aggregator.",
+      "Volunteer & Learning Affairs Head at the International Student Union · GDG Hangzhou volunteer for 1+ year.",
     ],
   },
   {
     period: "2019 – 2021",
-    role: "Chinese Language Immersion",
+    role: "Chinese Language Program",
     company: "Donghua University, Shanghai",
     bullets: [
-      "Achieved HSK4 proficiency — fully functional in Mandarin for technical and professional settings.",
-      "\"Outstanding Student\" recognition across all three semesters.",
+      "Reached HSK 4, working in Mandarin in technical and professional settings.",
+      "\"Outstanding Student\" recognition three years running.",
     ],
   },
 ];
 
 const SKILLS = [
-  { group: "Languages & Frameworks", items: ["Python", "JavaScript", "HTML/CSS", "React Native", "SQL", "PHP"] },
-  { group: "Dev & Tools", items: ["Git", "Docker", "Firebase", "Node.js", "Expo", "REST APIs"] },
-  { group: "Data Science", items: ["Pandas", "NumPy", "Scikit-learn", "PySpark", "Anaconda", "Jupyter"] },
+  { group: "Languages & Markup", items: ["TypeScript", "JavaScript", "HTML/CSS", "Python", "SQL"] },
+  { group: "Frameworks", items: ["React", "Next.js", "React Native (Expo)", "Angular"] },
+  { group: "Backend & Data", items: ["FastAPI", "Node.js", "Firebase", "MongoDB", "Spring Boot"] },
 ];
 
 // const TESTIMONIALS = [
@@ -199,19 +235,19 @@ const FAQ_ITEMS = [
   },
   {
     q: "What's your tech stack?",
-    a: "Frontend: React, Next.js, TypeScript, Tailwind CSS. Mobile: React Native + Expo. Backend: Node.js, Python, PHP. Databases: PostgreSQL, Firebase, MongoDB. Tooling: Docker, Git, Vercel, REST APIs.",
+    a: "Frontend: React, Next.js, TypeScript, Tailwind CSS, Angular. Mobile: React Native + Expo. Backend: FastAPI, Node.js, Spring Boot. Data: MongoDB, Firebase, SQL. Tooling: Git, Docker, Vercel, Figma.",
   },
   {
     q: "Can you handle design as well as development?",
-    a: "Yes — I design in Figma first, then build it myself. That means no designer-developer gap, tighter iteration, and a cohesive product instead of two people approximating each other's work.",
+    a: "Yes — I design in Figma first, then build it myself. That means no designer-developer gap, tighter iteration, and a cohesive product. My design work lives on a separate portfolio: kimodesigns.vercel.app.",
   },
   {
     q: "Do you work remotely with international clients?",
-    a: "Absolutely. I'm based in Hangzhou, China, and fluent in Arabic, French, English, and Chinese (HSK4). Comfortable with async work across any time zone — I've collaborated with teams in Europe, MENA, and Asia.",
+    a: "Absolutely. I'm based in Nanjing, China, and speak Arabic, French, English and Chinese (HSK 4). I've worked with teams in Morocco while studying in China, so async work across time zones is my normal.",
   },
   {
-    q: "Are you open to full-time positions?",
-    a: "Yes — actively looking for a full-stack or frontend role starting mid-2026 after graduation. Open to remote, hybrid, or on-site. Also available for freelance and contract work in parallel.",
+    q: "Are you available for work?",
+    a: "Yes. I'm doing my Master's in Computer Science at Nanjing University of Science and Technology, and I'm available for part-time and freelance frontend work alongside it. Remote or on-site, and open to relocating.",
   },
   {
     q: "What does your development process look like?",
@@ -220,15 +256,15 @@ const FAQ_ITEMS = [
 ];
 
 const MARQUEE_ITEMS = [
-  "React", "React Native", "Node.js", "Python", "TypeScript", "JavaScript",
-  "Firebase", "Docker", "SQL", "Figma", "Git", "Expo", "Pandas", "NumPy",
-  "REST APIs", "HTML/CSS", "PHP", "Scikit-learn",
+  "React", "Next.js", "TypeScript", "React Native", "Expo", "Angular",
+  "FastAPI", "Node.js", "MongoDB", "Firebase", "Spring Boot", "Tailwind CSS",
+  "Git", "Docker", "Vercel", "Figma", "Python", "SQL",
 ];
 
 // ─── Grain ─────────────────────────────────────────────────────────────────────
 function Grain() {
   return (
-    <div className="fixed inset-0 z-[9990] pointer-events-none select-none" style={{ opacity: 0.035, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: "200px 200px" }} />
+    <div className="fixed inset-0 z-[9990] pointer-events-none select-none" style={{ opacity: 0.035, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: "200px 200px", transform: "translateZ(0)" }} />
   );
 }
 
@@ -241,8 +277,9 @@ function MorphingBlob() {
           width: 760, height: 760,
           background: "conic-gradient(from 200deg at 45% 55%, #111 0%, #0d0d0d 20%, #181818 40%, #0a0a0a 60%, #141414 80%, #111 100%)",
           boxShadow: "inset 60px 60px 140px rgba(255,255,255,0.025), inset -60px -80px 160px rgba(0,0,0,0.9), 0 0 120px rgba(0,0,0,0.95)",
-          animation: "blob-morph 14s ease-in-out infinite, blob-rotate 28s linear infinite",
-          willChange: "border-radius, transform",
+          borderRadius: "62% 38% 46% 54% / 60% 44% 56% 40%",
+          animation: "blob-drift 28s ease-in-out infinite",
+          willChange: "transform",
         }}
       />
     </div>
@@ -296,7 +333,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
           animate={{
             rotate: open ? 45 : 0,
             borderColor: open ? `${A}60` : "rgba(255,255,255,0.12)",
-            backgroundColor: open ? `${A}12` : "transparent",
+            backgroundColor: open ? `${A}12` : `${A}00`,
           }}
           transition={{ duration: 0.25 }}
         >
@@ -464,15 +501,15 @@ const TOOLS = [
   { name: "React", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
   { name: "Next.js", category: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg", invert: true },
   { name: "TypeScript", category: "Language", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
-  { name: "Python", category: "Language", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
-  { name: "Node.js", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
   { name: "React Native", category: "Mobile", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
-  { name: "Docker", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
-  { name: "Git", category: "Version Control", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
-  { name: "Firebase", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
-  { name: "Figma", category: "Design", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
-  { name: "PostgreSQL", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
+  { name: "Angular", category: "Framework", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" },
   { name: "Tailwind CSS", category: "Styling", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+  { name: "FastAPI", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg" },
+  { name: "Node.js", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+  { name: "MongoDB", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" },
+  { name: "Firebase", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
+  { name: "Git", category: "Version Control", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+  { name: "Figma", category: "Design", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
 ];
 
 function ToolsGrid() {
@@ -706,55 +743,124 @@ function WorkProcess() {
 //   );
 // }
 
-// ─── CV Download dropdown ─────────────────────────────────────────────────────
-function CVDownload() {
+// ─── CV viewer ─────────────────────────────────────────────────────────────────
+// Opens the CV as a full-size preview (EN / 中文) with a download button.
+// Previews are images so they render on every phone, even where inline PDFs don't.
+const CVS = [
+  { label: "English", lang: "en", pdf: "/cv.pdf", preview: "/cv.jpg", file: "Abdelkarim_Soussane_CV_EN.pdf" },
+  { label: "中文", lang: "zh", pdf: "/cv-zh.pdf", preview: "/cv-zh.jpg", file: "Abdelkarim_Soussane_CV_ZH.pdf" },
+];
+
+function CVViewer() {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const cv = CVS[index];
+
+  // Portal target only exists in the browser; also keeps the overlay out of animated (transformed) parents.
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => setLoaded(false), [index, open]);
 
   useEffect(() => {
-    const close = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
     };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, []);
+  }, [open]);
 
   return (
-    <div ref={ref} className="relative">
+    <>
       <motion.button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(true)}
         className="font-code text-[12px] font-bold tracking-[0.1em] px-5 py-3 rounded-full border border-white/20 text-white/80 flex items-center gap-2"
         whileHover={{ borderColor: `${A}60`, color: A, y: -2 }}
         transition={{ duration: 0.2 }}
-        aria-expanded={open}
+        aria-haspopup="dialog"
       >
-        Download CV
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-[10px]">▾</motion.span>
+        View CV
       </motion.button>
+
+      {mounted && createPortal(
+      <AnimatePresence>
+      {open && (
       <motion.div
-        className="absolute top-full left-0 mt-2 w-44 rounded-xl border border-white/10 bg-[#111] overflow-hidden z-30"
-        initial={false}
-        animate={{ opacity: open ? 1 : 0, y: open ? 0 : -6, scale: open ? 1 : 0.96, pointerEvents: open ? "auto" : "none" }}
-        transition={{ duration: 0.18, ease: EASE }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="CV"
+        className="fixed inset-0 z-[9995] flex flex-col bg-black/90 backdrop-blur-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25, ease: EASE }}
       >
-        <a
-          href="/cv.pdf"
-          download="Abdelkarim_Soussane_CV_EN.pdf"
-          onClick={() => setOpen(false)}
-          className="flex items-center gap-3 px-4 py-3.5 font-code text-[12px] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors border-b border-white/[0.06]"
-        >
-          <span className="text-base">🇬🇧</span> English
-        </a>
-        <a
-          href="/cv-zh.pdf"
-          download="Abdelkarim_Soussane_CV_ZH.pdf"
-          onClick={() => setOpen(false)}
-          className="flex items-center gap-3 px-4 py-3.5 font-code text-[12px] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors"
-        >
-          <span className="text-base">🇨🇳</span> Chinese
-        </a>
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-8 py-4">
+          <div className="flex items-center gap-1 rounded-full border border-white/10 p-1" role="group" aria-label="Language">
+            {CVS.map((c, i) => (
+              <button
+                key={c.pdf}
+                lang={c.lang}
+                aria-pressed={index === i}
+                onClick={() => setIndex(i)}
+                className="font-code text-[12px] tracking-[0.1em] px-4 py-1.5 rounded-full transition-colors"
+                style={index === i ? { background: A, color: "#0a0a0a" } : { color: "rgba(255,255,255,0.65)" }}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href={cv.pdf}
+              download={cv.file}
+              className="font-code text-[12px] font-bold tracking-[0.1em] px-4 py-2 rounded-full"
+              style={{ background: A, color: "#0a0a0a" }}
+            >
+              Download <span className="hidden sm:inline">PDF</span> ↓
+            </a>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close CV"
+              className="w-10 h-10 rounded-full border border-white/15 bg-white/5 text-white/80 font-code text-lg leading-none hover:text-white"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 pb-10">
+          <motion.div
+            className="relative mx-auto w-full max-w-[820px] rounded-xl overflow-hidden bg-white shadow-2xl"
+            style={{ aspectRatio: "1600 / 2262" }}
+            initial={{ y: 24 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
+          >
+            {!loaded && <div className="absolute inset-0 bg-[#141414] animate-pulse" />}
+            {open && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={cv.preview}
+                src={cv.preview}
+                alt={`Abdelkarim Soussane CV, ${cv.label}`}
+                onLoad={() => setLoaded(true)}
+                className="block w-full h-full transition-opacity duration-300"
+                style={{ opacity: loaded ? 1 : 0 }}
+              />
+            )}
+          </motion.div>
+        </div>
       </motion.div>
-    </div>
+      )}
+      </AnimatePresence>,
+      document.body,
+      )}
+    </>
   );
 }
 
@@ -787,7 +893,7 @@ function ProfilePhoto({ className }: { className?: string }) {
   const [err, setErr] = useState(false);
   return !err ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/profile.jpg" alt="Abdelkarim Soussane" className={className ?? "w-full h-full object-cover"} onError={() => setErr(true)} />
+    <img src="/profile.webp" alt="Abdelkarim Soussane" loading="lazy" decoding="async" className={className ?? "w-full h-full object-cover"} onError={() => setErr(true)} />
   ) : (
     <div className="w-full h-full bg-gradient-to-br from-[#1c1c1c] to-[#0a0a0a] flex items-center justify-center">
       <span className="font-heading text-[6rem] text-white/[0.06] select-none">AK</span>
@@ -795,195 +901,66 @@ function ProfilePhoto({ className }: { className?: string }) {
   );
 }
 
-// ─── Phone hero — the Porty layout inside the phone screen ────────────────────
-function PhoneHeroContent() {
-  return (
-    <div className="relative h-full bg-[#0a0a0a] overflow-hidden flex flex-col">
+// ─── Magnet ────────────────────────────────────────────────────────────────────
+// Pulls its child toward the cursor while the cursor is within `padding` px of it.
+function Magnet({ children, padding = 150, strength = 3 }: { children: React.ReactNode; padding?: number; strength?: number }) {
+  const areaRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 140, damping: 18, mass: 0.6 });
+  const sy = useSpring(y, { stiffness: 140, damping: 18, mass: 0.6 });
 
-      {/* Full-bleed photo background */}
-      <div className="absolute inset-0">
-        <ProfilePhoto className="w-full h-full object-cover object-top" />
-        {/* Multi-layer gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/90" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-      </div>
-
-      {/* Top bar — Hello + social icons */}
-      <motion.div
-        className="relative z-10 flex items-center justify-between px-5 pt-10"
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3, ease: EASE }}
-      >
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm">👋</span>
-          <span className="font-code text-[12px] tracking-wide" style={{ color: A }}>Hello</span>
-        </div>
-        <div className="flex gap-2">
-          <SocialBtn type="x"        href="https://x.com/kimosoussane"                    title="X / Twitter" size="sm" />
-          <SocialBtn type="github"   href="https://github.com/Kimox01"                    title="GitHub"      size="sm" />
-          <SocialBtn type="linkedin" href="https://linkedin.com/in/abdelkarimsoussane"    title="LinkedIn"    size="sm" />
-        </div>
-      </motion.div>
-
-      {/* Spacer — pushes name to lower half of photo */}
-      <div className="flex-1" />
-
-      {/* Name — massive, overlapping photo */}
-      <motion.div
-        className="relative z-10 px-4 pb-0"
-        initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.75, delay: 0.45, ease: EASE }}
-      >
-        <h1
-          className="font-heading uppercase leading-[0.85] text-white"
-          style={{ fontSize: "clamp(52px, 16vw, 72px)", letterSpacing: "-0.01em" }}
-        >
-          Abdelkarim<br />Soussane
-        </h1>
-      </motion.div>
-
-      {/* Horizontal divider */}
-      <motion.div
-        className="relative z-10 mx-4 my-4 h-px bg-white/20"
-        initial={{ scaleX: 0, originX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
-      />
-
-      {/* Role + social dots */}
-      <motion.div
-        className="relative z-10 px-4 flex items-center justify-between mb-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.8 }}
-      >
-        <p className="font-code text-white/60 text-[11px] leading-tight">
-          I&apos;m a Full-Stack Developer
-        </p>
-      </motion.div>
-
-      {/* Quote */}
-      <motion.div
-        className="relative z-10 px-4 mb-5"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.9, ease: EASE }}
-      >
-        <p className="text-white/75 leading-[1.55]" style={{ fontFamily: "var(--font-jetbrains)", fontSize: "12px" }}>
-          &ldquo;I design and code{" "}
-          <span className="text-white font-bold">beautifully simple things</span>{" "}
-          and i love what i do&rdquo;
-        </p>
-      </motion.div>
-
-      {/* Tags */}
-      <motion.div
-        className="relative z-10 px-4 flex items-center gap-2 mb-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1.0 }}
-      >
-        {["React", "Node.js", "Python"].map((tag) => (
-          <span key={tag} className="font-code text-[10px] tracking-[0.1em] px-2.5 py-1 rounded-full border border-white/15 text-white/50">{tag}</span>
-        ))}
-      </motion.div>
-
-      {/* CTA buttons */}
-      <motion.div
-        className="relative z-10 px-4 flex gap-3 mb-5"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.05, ease: EASE }}
-      >
-        <motion.a
-          href="#contact"
-          className="flex-1 flex items-center justify-center gap-2 font-code text-[12px] font-bold py-3 rounded-full"
-          style={{ background: A, color: "#0a0a0a" }}
-          whileHover={{ scale: 1.04, boxShadow: `0 0 24px ${A}60` }}
-          transition={{ duration: 0.2 }}
-        >
-          Hire Me <span className="text-[14px]">↗</span>
-        </motion.a>
-        <motion.a
-          href="#projects"
-          className="flex-1 flex items-center justify-center font-code text-[12px] py-3 rounded-full border border-white/20 text-white/80"
-          whileHover={{ borderColor: "rgba(255,255,255,0.4)", color: "#fff" }}
-          transition={{ duration: 0.2 }}
-        >
-          My Works
-        </motion.a>
-      </motion.div>
-
-      {/* Bottom bar */}
-      <motion.div
-        className="relative z-10 px-4 pb-6 flex items-center justify-between"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1.15 }}
-      >
-        <span className="font-code text-[10px] text-white/40 tracking-[0.1em] flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full inline-block animate-pulse" style={{ background: A }} />
-          Open to work · June 2026
-        </span>
-        <a href="#contact" className="font-code text-[10px] tracking-[0.1em] transition-opacity hover:opacity-70" style={{ color: A }}>
-          Hire me ↗
-        </a>
-      </motion.div>
-    </div>
-  );
-}
-
-// ─── Phone frame ───────────────────────────────────────────────────────────────
-const PHONE_W = 390;
-const PHONE_H = 864;
-
-function PhoneFrame() {
-  return (
-    <div className="relative" style={{ filter: "drop-shadow(0 60px 120px rgba(0,0,0,0.85)) drop-shadow(0 0 1px rgba(255,255,255,0.04))" }}>
-      <div className="absolute -left-[14px] top-[120px] w-[6px] h-[36px] rounded-l-full bg-[#1c1c1c] border border-white/[0.06]" />
-      <div className="absolute -left-[14px] top-[170px] w-[6px] h-[52px] rounded-l-full bg-[#1c1c1c] border border-white/[0.06]" />
-      <div className="absolute -right-[14px] top-[150px] w-[6px] h-[68px] rounded-r-full bg-[#1c1c1c] border border-white/[0.06]" />
-      <div
-        className="relative rounded-[52px] overflow-hidden"
-        style={{
-          width: PHONE_W,
-          padding: "10px",
-          background: "linear-gradient(160deg, #2a2a2a 0%, #111 40%, #1e1e1e 100%)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.5)",
-        }}
-      >
-        <div className="rounded-[44px] overflow-hidden" style={{ background: "#000", height: 844 }}>
-          <div className="relative flex justify-center pt-3 pb-1 bg-black z-20">
-            <div className="w-[120px] h-[34px] rounded-full bg-black border border-white/[0.08] flex items-center justify-center gap-3">
-              <div className="w-[10px] h-[10px] rounded-full bg-[#1a1a1a] border border-white/10" />
-              <div className="w-[8px] h-[8px] rounded-full bg-[#1a1a1a] border border-white/10" />
-            </div>
-          </div>
-          <div style={{ height: "calc(844px - 50px)" }}>
-            <PhoneHeroContent />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ScaledPhone() {
-  const [scale, setScale] = useState(1);
   useEffect(() => {
-    const calc = () => setScale(parseFloat(Math.min(1, (window.innerWidth - 32) / PHONE_W).toFixed(3)));
-    calc();
-    window.addEventListener("resize", calc, { passive: true });
-    return () => window.removeEventListener("resize", calc);
-  }, []);
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduced) return;
+    const onMove = (e: PointerEvent) => {
+      const r = areaRef.current?.getBoundingClientRect();
+      if (!r) return;
+      const near =
+        e.clientX > r.left - padding && e.clientX < r.right + padding &&
+        e.clientY > r.top - padding && e.clientY < r.bottom + padding;
+      x.set(near ? (e.clientX - (r.left + r.width / 2)) / strength : 0);
+      y.set(near ? (e.clientY - (r.top + r.height / 2)) / strength : 0);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [padding, strength, x, y]);
+
   return (
-    <div style={{ width: PHONE_W * scale, height: PHONE_H * scale, position: "relative", flexShrink: 0 }}>
-      <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", position: "absolute", top: 0, left: 0 }}>
-        <PhoneFrame />
-      </div>
+    <div ref={areaRef}>
+      <motion.div style={{ x: sx, y: sy, willChange: "transform" }}>{children}</motion.div>
     </div>
+  );
+}
+
+// ─── Gradient call-to-action pill ─────────────────────────────────────────────
+function ContactButton() {
+  const goToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById("contact");
+    if (!target) return;
+    e.preventDefault();
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    window.history.replaceState(null, "", "#contact");
+  };
+  return (
+    <motion.a
+      href="#contact"
+      onClick={goToContact}
+      className="inline-flex items-center gap-2 rounded-full font-code font-bold uppercase tracking-[0.2em] text-white whitespace-nowrap px-7 py-3 sm:px-9 sm:py-3.5 md:px-11 md:py-4 text-[11px] sm:text-[12px] md:text-[13px]"
+      style={{
+        background: "linear-gradient(123deg, #12051f 7%, #5b21b6 40%, #7c3aed 74%, #9d4edd 100%)",
+        boxShadow: `0px 4px 4px ${A}40, 4px 4px 12px #4c1d95 inset`,
+        outline: "2px solid rgba(255,255,255,0.85)",
+        outlineOffset: "-3px",
+      }}
+      whileHover={{ scale: 1.04, boxShadow: `0 0 36px ${A}60, 4px 4px 12px #4c1d95 inset` }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.2 }}
+    >
+      Hire me <span aria-hidden="true">↗</span>
+    </motion.a>
   );
 }
 
@@ -1029,7 +1006,13 @@ function StackCard({
             <img
               src={project.image}
               alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-75"
+              loading="lazy"
+              decoding="async"
+              className={
+                project.imageFit === "logo"
+                  ? "absolute inset-0 w-full h-full object-cover"
+                  : "absolute inset-0 w-full h-full object-cover opacity-75"
+              }
             />
           )}
           {/* Dot grid overlay */}
@@ -1149,7 +1132,7 @@ function ProjectsStack() {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
   return (
-    <section id="projects" ref={containerRef} style={{ height: `${total * 120}vh` }} className="relative">
+    <section id="projects" ref={containerRef} style={{ height: `${total * 70}vh` }} className="relative">
       <div className="sticky top-0 h-screen flex flex-col justify-center items-center px-6 py-6" style={{ overflow: "clip" }}>
 
         {/* Header fades out as first card rises */}
@@ -1235,6 +1218,7 @@ function Logo({ className }: { className?: string }) {
 // ─── Navbar ────────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
   { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
   // { label: "Pricing", href: "#pricing" },
 ] as const;
@@ -1274,6 +1258,7 @@ function Navbar() {
           {NAV_LINKS.map(({ label, href }) => (
             <a key={label} href={href} className="font-code text-[12px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5">{label}</a>
           ))}
+          <a href={DESIGN_PORTFOLIO} target="_blank" rel="noopener noreferrer" className="font-code text-[12px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5">Design ↗</a>
         </div>
 
         {/* Right side */}
@@ -1315,6 +1300,15 @@ function Navbar() {
             </a>
           ))}
           <a
+            href={DESIGN_PORTFOLIO}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMenuOpen(false)}
+            className="font-code text-[14px] tracking-[0.15em] text-white/60 hover:text-white transition-colors px-5 py-3.5 rounded-xl hover:bg-white/[0.05]"
+          >
+            Design portfolio ↗
+          </a>
+          <a
             href="#contact"
             onClick={() => setMenuOpen(false)}
             className="mt-1 font-code text-[14px] font-bold tracking-[0.1em] px-5 py-3.5 rounded-xl text-center"
@@ -1331,8 +1325,7 @@ function Navbar() {
 // ─── Main ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const { scrollY } = useScroll();
-  const phoneY = useTransform(scrollY, [0, 600], [0, 60]);
-  const ghostY = useTransform(scrollY, [0, 600], [0, -50]);
+  const headingY = useTransform(scrollY, [0, 700], [0, -80]);
 
   return (
     <div className="relative bg-[#080808] text-white" style={{ overflowX: "clip" }}>
@@ -1341,39 +1334,66 @@ export default function Home() {
       <Navbar />
 
       {/* ═══════════════════════════════════ HERO ═══════════════════════════════════ */}
-      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center pt-24 pb-10 overflow-hidden">
-        {/* Ghost text sides */}
-        <motion.div className="absolute left-[-2%] top-1/2 -translate-y-1/2 font-heading text-[clamp(60px,12vw,140px)] leading-none uppercase select-none pointer-events-none" style={{ color: "rgba(255,255,255,0.022)", y: ghostY }}>
-          portfolio
-        </motion.div>
-        <motion.div className="absolute right-[-2%] top-1/2 -translate-y-1/2 font-heading text-[clamp(60px,12vw,140px)] leading-none uppercase select-none pointer-events-none" style={{ color: "rgba(255,255,255,0.022)", y: ghostY }}>
-          my work
-        </motion.div>
-
-        {/* Phone with glow */}
-        <motion.div
-          style={{ y: phoneY }}
-          initial={{ opacity: 0, scale: 0.88, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
-          className="relative z-10"
-        >
-          <div className="absolute inset-[-50px] rounded-[80px] blur-3xl pointer-events-none" style={{ background: `${A}09` }} />
-          <ScaledPhone />
+      <section id="home" className="relative h-[100svh] min-h-[620px] flex flex-col z-10" style={{ overflowX: "clip" }}>
+        {/* Massive greeting behind the character */}
+        <motion.div className="overflow-hidden px-2 pt-24 sm:pt-24 md:pt-20" style={{ y: headingY }}>
+          <motion.h1
+            className="hero-heading font-heading uppercase leading-[0.86] tracking-tight whitespace-nowrap w-full text-center text-[29vw] sm:text-[28.5vw] lg:text-[28.5vw]"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
+          >
+            Hi, I&apos;m Kimo
+          </motion.h1>
         </motion.div>
 
-        {/* Scroll cue */}
+        {/* Character, pulled toward the cursor */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-[38%] sm:top-auto sm:translate-y-0 sm:bottom-[4%] w-[78vw] max-w-[300px] sm:max-w-none sm:w-[300px] md:w-[360px] lg:w-[420px]"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.6, ease: EASE }}
         >
-          <span className="font-code text-[10px] tracking-[0.4em] uppercase text-white/25">Scroll</span>
-          <div className="relative w-px h-10 bg-white/10 overflow-hidden rounded-full">
-            <motion.div className="absolute top-0 left-0 w-full rounded-full" style={{ height: "45%", background: A }} animate={{ y: ["-100%", "270%"] }} transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }} />
-          </div>
+          <Magnet padding={150} strength={3}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/kimo-head.webp"
+              alt="Abdelkarim Soussane, 3D character"
+              width={915}
+              height={1171}
+              className="w-full h-auto select-none pointer-events-none drop-shadow-[0_40px_60px_rgba(0,0,0,0.65)]"
+              draggable={false}
+            />
+          </Magnet>
         </motion.div>
+
+        {/* Bottom bar: who I am on the left, call to action on the right */}
+        <div className="mt-auto relative z-20 flex justify-between items-end gap-6 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.35, ease: EASE }}
+          >
+            <p
+              className="font-code uppercase tracking-wide leading-snug text-[#D7E2EA] max-w-[170px] sm:max-w-[240px] md:max-w-[300px]"
+              style={{ fontSize: "clamp(0.68rem, 1.05vw, 1rem)" }}
+            >
+              Frontend developer building fast, polished web &amp; mobile apps, from Figma to production
+            </p>
+            <div className="hidden sm:flex items-center gap-2 mt-5">
+              <SocialBtn type="github"   href="https://github.com/Kimox01"                 title="GitHub" />
+              <SocialBtn type="linkedin" href="https://linkedin.com/in/abdelkarimsoussane" title="LinkedIn" />
+              <SocialBtn type="x"        href="https://x.com/kimosoussane"                 title="X / Twitter" />
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
+          >
+            <ContactButton />
+          </motion.div>
+        </div>
       </section>
 
       {/* Marquee strip */}
@@ -1392,10 +1412,10 @@ export default function Home() {
             <StaggerItem>
               <motion.div className="rounded-2xl p-7 relative overflow-hidden h-full flex flex-col" style={{ background: A }} whileHover={{ scale: 1.02, y: -4 }} transition={{ duration: 0.3, ease: EASE }}>
                 <p className="font-code text-[11px] tracking-[0.25em] uppercase text-black/50 mb-5">· What I do</p>
-                <h3 className="font-heading text-[3.2rem] leading-none text-black mb-3">Full-Stack</h3>
-                <p className="font-code text-[12px] text-black/65 leading-relaxed flex-1">Web · Mobile · Backend · Data<br />One developer — the whole product.</p>
+                <h3 className="font-heading text-[3.2rem] leading-none text-black mb-3">Frontend</h3>
+                <p className="font-code text-[12px] text-black/65 leading-relaxed flex-1">Web · Mobile · From Figma to production<br />I design it, then I build it.</p>
                 <div className="mt-5 flex flex-wrap gap-1.5">
-                  {["React", "Next.js", "React Native", "Node.js", "Python"].map((t) => (
+                  {["Next.js", "React", "React Native", "TypeScript", "FastAPI"].map((t) => (
                     <span key={t} className="font-code text-[10px] px-2.5 py-1 rounded-full bg-black/10 text-black/60">{t}</span>
                   ))}
                 </div>
@@ -1406,11 +1426,11 @@ export default function Home() {
             <StaggerItem>
               <motion.div className="rounded-2xl p-7 border border-white/[0.07] bg-white/[0.02] h-full flex flex-col" whileHover={{ scale: 1.02, y: -4, borderColor: `${A}25` }} transition={{ duration: 0.3, ease: EASE }}>
                 <p className="font-code text-[11px] tracking-[0.25em] uppercase text-white/35 mb-5">· Track record</p>
-                <h3 className="font-heading text-[5.5rem] leading-none text-white">4+</h3>
-                <p className="font-code text-[13px] text-white/60 mt-1 mb-3">Projects shipped to production</p>
+                <h3 className="font-heading text-[5.5rem] leading-none text-white">5</h3>
+                <p className="font-code text-[13px] text-white/60 mt-1 mb-3">Live web projects</p>
                 <p className="font-code text-[11px] text-white/30 leading-[1.7] flex-1">
-                  DigiCard web app · SurFoodSave rescue platform<br />
-                  Second-hand marketplace · Dev tooling
+                  Passiflora · Pulse AI News · Luckin Coffee · Seiko<br />
+                  Plus PetiVeto, a platform I co-founded (pre-launch)
                 </p>
               </motion.div>
             </StaggerItem>
@@ -1423,9 +1443,9 @@ export default function Home() {
                   <span className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse" style={{ background: A }} />
                   <h3 className="font-heading text-[3.2rem] leading-none" style={{ color: A }}>Open</h3>
                 </div>
-                <p className="font-code text-[13px] text-white/60 mb-3">To full-time or freelance roles</p>
+                <p className="font-code text-[13px] text-white/60 mb-3">To part-time or freelance work</p>
                 <p className="font-code text-[11px] text-white/30 leading-[1.7] flex-1">
-                  Available June 2026 · Remote worldwide<br />
+                  Master&apos;s student in Nanjing · Open to relocate<br />
                   AR · FR · EN · ZH — work across any time zone
                 </p>
               </motion.div>
@@ -1448,7 +1468,7 @@ export default function Home() {
                 <div className="absolute bottom-4 right-4 w-7 h-7 border-b-2 border-r-2" style={{ borderColor: `${A}70` }} />
                 <motion.div className="absolute -bottom-5 left-5 right-5 bg-[#111] border border-white/10 rounded-2xl px-5 py-3 shadow-xl" animate={{ y: [-4, 4, -4] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
                   <div className="flex items-center justify-between">
-                    <p className="font-code text-[11px] text-white/50">📍 Hangzhou, China</p>
+                    <p className="font-code text-[11px] text-white/50">📍 Nanjing, China</p>
                     <span className="flex items-center gap-1.5 font-code text-[10px]" style={{ color: A }}>
                       <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: A }} />
                       Open to work
@@ -1464,14 +1484,24 @@ export default function Home() {
               </Reveal>
               <Reveal delay={0.1}>
                 <div className="space-y-4 font-code text-[13px] text-white/50 leading-[1.9] mb-10">
-                  <p>I&apos;m <span className="text-white font-bold">Abdelkarim Soussane</span> — a final-year Software Engineering student at <span className="text-white">Hangzhou Dianzi University</span>, building real products across the full stack since 2022.</p>
-                  <p>At <span className="text-white">Innovatech Consulting</span>, I owned the entire frontend of DigiCard — a digital business card platform with QR sharing and an admin dashboard — from design in Figma to deployment, solo. When the team needed backend help, I covered that too.</p>
-                  <p>I write <span className="text-white">React, React Native, Node.js, and Python</span> day-to-day, speak <span style={{ color: A }}>4 languages</span>, and work comfortably across time zones. Looking for a <span style={{ color: A }}>full-time role starting June 2026</span>.</p>
+                  <p>I&apos;m <span className="text-white font-bold">Abdelkarim Soussane</span> — a frontend developer who ships complete products, from Figma designs to production web and mobile apps. I&apos;m doing my <span className="text-white">Master&apos;s in Computer Science at Nanjing University of Science and Technology</span>, after graduating in Software Engineering from Hangzhou Dianzi University.</p>
+                  <p>I co-founded <span className="text-white">PetiVeto</span>, a veterinary platform for Morocco, and built its entire frontend: a Next.js clinic dashboard and a React Native mobile app. Before that, I built the complete Angular frontend of DigiCard at <span className="text-white">Innovatech Consulting</span>.</p>
+                  <p>I write <span className="text-white">Next.js, TypeScript and React Native</span> day-to-day, speak <span style={{ color: A }}>4 languages</span>, and I&apos;m available for <span style={{ color: A }}>part-time or freelance work</span>.</p>
                 </div>
               </Reveal>
               <Reveal delay={0.2}>
                 <div className="flex gap-4 flex-wrap">
-                  <CVDownload />
+                  <CVViewer />
+                  <motion.a
+                    href={DESIGN_PORTFOLIO}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-code text-[12px] font-bold tracking-[0.1em] px-5 py-3 rounded-full border border-white/20 text-white/80 flex items-center gap-2"
+                    whileHover={{ borderColor: `${A}60`, color: A, y: -2 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    Design portfolio ↗
+                  </motion.a>
                   <div className="flex items-center gap-2">
                     <SocialBtn type="github"   href="https://github.com/Kimox01"                 title="GitHub" />
                     <SocialBtn type="linkedin" href="https://linkedin.com/in/abdelkarimsoussane" title="LinkedIn" />
@@ -1487,7 +1517,7 @@ export default function Home() {
       <section id="services" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
         <div className="max-w-5xl mx-auto">
           <Reveal><SectionLabel n="02" text="Services" /><h2 className="font-heading text-5xl md:text-7xl uppercase leading-none text-white mb-14">What I Offer</h2></Reveal>
-          <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.04] rounded-2xl overflow-hidden border border-white/[0.05]">
+          <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/[0.04] rounded-2xl overflow-hidden border border-white/[0.05]">
             {SERVICES.map((s) => (
               <StaggerItem key={s.num}>
                 <motion.div className="bg-[#0d0d0d] p-8 flex flex-col gap-4 h-full" whileHover={{ backgroundColor: "#121212" }} transition={{ duration: 0.2 }}>
@@ -1615,11 +1645,38 @@ export default function Home() {
         </div>
       </section> */}
 
+      {/* ═══════════════════════════════════ DESIGN PORTFOLIO ═══════════════════════════════════ */}
+      <section className="py-10 px-6 md:px-16 lg:px-24 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <motion.a
+              href={DESIGN_PORTFOLIO}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative flex flex-col md:flex-row md:items-center gap-8 rounded-3xl border border-white/[0.07] bg-white/[0.02] p-8 md:p-10 overflow-hidden"
+              whileHover={{ borderColor: `${A}40`, backgroundColor: "rgba(255,255,255,0.035)" }}
+              transition={{ duration: 0.3, ease: EASE }}
+            >
+              <div className="shrink-0 w-20 h-20 rounded-2xl bg-[#15202f] border border-white/10 flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/kimo-designs-mark.webp" alt="" className="h-11 w-auto" />
+              </div>
+              <div className="flex-1">
+                <p className="font-code text-[11px] tracking-[0.3em] uppercase mb-2" style={{ color: A }}>Also a designer</p>
+                <h3 className="font-heading text-4xl md:text-5xl uppercase text-white leading-none mb-3">Kimo Designs</h3>
+                <p className="font-code text-[12.5px] text-white/45 leading-relaxed max-w-xl">My UI/UX portfolio: case studies for PetiVeto and SurFoodSave, live demos of my websites, and the design side of everything I build.</p>
+              </div>
+              <span className="shrink-0 self-start md:self-center w-12 h-12 rounded-full border border-white/15 flex items-center justify-center font-code text-white/70 transition-all duration-300 group-hover:bg-[#a78bfa] group-hover:text-black group-hover:border-transparent">↗</span>
+            </motion.a>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ═══════════════════════════════════ FAQ ═══════════════════════════════════ */}
       <section id="faq" className="py-20 px-6 md:px-16 lg:px-24 relative z-10">
         <div className="max-w-5xl mx-auto">
           <Reveal className="text-center mb-12">
-            <SectionLabel n="09" text="FAQ" />
+            <SectionLabel n="07" text="FAQ" />
             <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none text-white mb-4">Common Questions</h2>
             <p className="font-code text-white/35 text-[13px] leading-relaxed">Everything you might want to know before reaching out.</p>
           </Reveal>
@@ -1636,7 +1693,7 @@ export default function Home() {
         <motion.div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at center, ${A}07 0%, transparent 70%)` }} animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 5, repeat: Infinity }} />
         <div className="max-w-5xl mx-auto relative">
           <Reveal className="text-center mb-14">
-            <SectionLabel n="10" text="Contact" />
+            <SectionLabel n="08" text="Contact" />
             <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none text-white mb-4">Let&apos;s Work Together</h2>
             <p className="font-code text-white/40 text-[13px] leading-relaxed">
               Looking for a developer?{" "}
@@ -1656,13 +1713,14 @@ export default function Home() {
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <Logo className="h-10" />
-            <p className="font-code text-white/30 text-xs">Full-Stack Developer · Hangzhou, China</p>
+            <p className="font-code text-white/30 text-xs">Frontend Developer · Nanjing, China</p>
           </div>
           <div className="flex items-center gap-3">
             {([
               { label: "GitHub",   href: "https://github.com/Kimox01" },
               { label: "LinkedIn", href: "https://linkedin.com/in/abdelkarimsoussane" },
               { label: "X",        href: "https://x.com/kimosoussane" },
+              { label: "Design",   href: DESIGN_PORTFOLIO },
               { label: "Email",    href: "mailto:abdelkarimsoussane@gmail.com" },
             ] as const).map(({ label, href }) => (
               <motion.a
