@@ -42,7 +42,20 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "02",  
+    num: "02",
+    category: "Live · Full-stack",
+    title: "Soussane Joaillerie",
+    desc: "Website for a fine-jewelry house working in 18k gold: a filterable collection with quick view, made-to-order requests and ordering by Instagram DM. French, mobile first.",
+    tags: ["Next.js", "TypeScript", "FastAPI", "MongoDB"],
+    bg: "#1c1612",
+    grid: "#d4b483",
+    accent: "#d4b483",
+    image: "/joaillerie.webp",
+    github: null as string | null,
+    demo: "https://soussane-joaillerie.vercel.app/" as string | null,
+  },
+  {
+    num: "03",  
     category: "Concept · Full-stack",
     title: "Passiflora",
     desc: "Full-stack, French-language restaurant platform for Casablanca: menu, online ordering, table reservations and order tracking.",
@@ -55,7 +68,7 @@ const PROJECTS = [
     demo: "https://passiflora-menu.vercel.app/" as string | null,
   },
   {
-    num: "03",  
+    num: "04",  
     category: "Web App",
     title: "Pulse AI News",
     desc: "Real-time news aggregator pulling live stories from BBC, NPR, The Guardian, arXiv and more, filtered by category and refreshed automatically.",
@@ -68,7 +81,7 @@ const PROJECTS = [
     demo: "https://pulseainews.vercel.app/" as string | null,
   },
   {
-    num: "04",
+    num: "05",
     category: "Concept · Web",
     title: "Luckin Coffee",
     desc: "Responsive English/中文 site for Luckin Coffee (瑞幸咖啡) with language switching, statically exported.",
@@ -81,7 +94,7 @@ const PROJECTS = [
     demo: "https://luckincoffee.vercel.app/luckin" as string | null,
   },
   {
-    num: "05",
+    num: "06",
     category: "Concept · Web",
     title: "Seiko Watches",
     desc: "Scroll-driven product page with cinematic animations, optimized for load performance.",
@@ -94,7 +107,7 @@ const PROJECTS = [
     demo: "https://seiko-watches.vercel.app/" as string | null,
   },
   {
-    num: "06",
+    num: "07",
     category: "Mobile App",
     title: "SurFoodSave",
     desc: "App for reselling near-expiry food, with listings, expiry tracking, user auth and in-app messaging. Designed in Figma first.",
@@ -107,7 +120,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "07",
+    num: "08",
     category: "Web Development",
     title: "DigiCard Web App",
     desc: "Digital business card platform with QR sharing and an admin dashboard. I built the complete Angular frontend during my internship at Innovatech.",
@@ -120,7 +133,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "08",
+    num: "09",
     category: "Mobile App",
     title: "Second-hand Market",
     desc: "P2P marketplace with in-app messaging, photo uploads, category filtering and a Node.js REST backend.",
@@ -133,7 +146,7 @@ const PROJECTS = [
     demo: null as string | null,
   },
   {
-    num: "09",
+    num: "10",
     category: "Dev Tool",
     title: "Convertiverse",
     desc: "Automated pipeline transforming structured Excel data into clean, styled, production-ready HTML tables. Live on the web.",
@@ -1426,10 +1439,10 @@ export default function Home() {
             <StaggerItem>
               <motion.div className="rounded-2xl p-7 border border-white/[0.07] bg-white/[0.02] h-full flex flex-col" whileHover={{ scale: 1.02, y: -4, borderColor: `${A}25` }} transition={{ duration: 0.3, ease: EASE }}>
                 <p className="font-code text-[11px] tracking-[0.25em] uppercase text-white/35 mb-5">· Track record</p>
-                <h3 className="font-heading text-[5.5rem] leading-none text-white">5</h3>
+                <h3 className="font-heading text-[5.5rem] leading-none text-white">6</h3>
                 <p className="font-code text-[13px] text-white/60 mt-1 mb-3">Live web projects</p>
                 <p className="font-code text-[11px] text-white/30 leading-[1.7] flex-1">
-                  Passiflora · Pulse AI News · Luckin Coffee · Seiko<br />
+                  Soussane Joaillerie · Passiflora · Pulse AI News<br />Luckin Coffee · Seiko<br />
                   Plus PetiVeto, a platform I co-founded (pre-launch)
                 </p>
               </motion.div>
